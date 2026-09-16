@@ -18,8 +18,12 @@ export default function RootLayout({
       <body className="bg-zinc-950 text-white">
         <header className="border-b border-zinc-800">
           <nav className="mx-auto flex max-w-5xl gap-6 px-6 py-4">
-            <Link href="/">Home</Link>
-            <Link href="/about">About</Link>
+            <Link href="/" className="transition hover:text-blue-400">
+              Home
+            </Link>
+            <Link href="/about" className="transition hover:text-blue-400">
+              About
+            </Link>
           </nav>
         </header>
 
