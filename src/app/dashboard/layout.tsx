@@ -13,6 +13,12 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
           <nav className="mt-6 flex flex-col gap-3">
             <Link
+              href="/dashboard/profile"
+              className="text-zinc-300 hover:text-white"
+            >
+              Profile
+            </Link>
+            <Link
               href="/dashboard/settings"
               className="text-zinc-300 hover:text-white"
             >
