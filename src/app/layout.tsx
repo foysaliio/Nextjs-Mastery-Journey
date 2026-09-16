@@ -24,6 +24,9 @@ export default function RootLayout({
             <Link href="/about" className="transition hover:text-blue-400">
               About
             </Link>
+            <Link href="/contact" className="transition hover:text-blue-400">
+              Contact
+            </Link>
           </nav>
         </header>
 
