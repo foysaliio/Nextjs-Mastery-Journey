@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
+import Link from "next/link";
+import React from "react";
 import "./globals.css";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Next.js Mastery Journey",
-  description:
-    "A structured journey to master modern Next.js and full-stack development.",
+  description: "Learning modern full-stack development with Next.js.",
 };
 
 export default function RootLayout({
@@ -14,7 +15,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="bg-zinc-950 text-white">
+        <header className="border-b border-zinc-800">
+          <nav className="mx-auto flex max-w-5xl gap-6 px-6 py-4">
+            <Link href="/">Home</Link>
+            <Link href="/about">About</Link>
+          </nav>
+        </header>
+
+        {children}
+      </body>
     </html>
   );
 }
