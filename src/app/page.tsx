@@ -1,4 +1,4 @@
-import Counter from "./_components/Counter";
+import InteractiveProfile from "./_components/InteractiveProfile";
 import JourneyBadge from "./_components/JourneyBadge";
 import ServerGreeting from "./_components/ServerGreeting";
 
@@ -18,7 +18,7 @@ export default function HomePage() {
 
         <ServerGreeting />
 
-        <Counter />
+        <InteractiveProfile />
       </div>
     </main>
   );
