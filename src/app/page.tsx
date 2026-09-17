@@ -1,4 +1,5 @@
 import JourneyBadge from "./_components/JourneyBadge";
+import ServerGreeting from "./_components/ServerGreeting";
 
 export default function HomePage() {
   return (
@@ -13,6 +14,8 @@ export default function HomePage() {
         <p className="mt-4 max-w-2xl text-zinc-300">
           This page is rendered from src/app/page.tsx.
         </p>
+
+        <ServerGreeting />
       </div>
     </main>
   );
