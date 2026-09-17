@@ -2,18 +2,24 @@
 
 import { useState } from "react";
 
-interface UserCardProps {
+type User = {
+  id: number;
   name: string;
   email: string;
-}
+};
 
-const UserCard = ({ name, email }: UserCardProps) => {
+type UserCardProps = {
+  user: User;
+};
+
+function UserCard({ user }: UserCardProps) {
   const [showEmail, setShowEmail] = useState<boolean>(false);
+
   return (
     <article className="rounded-lg bg-zinc-900 p-4">
-      <h3 className="font-semibold">{name}</h3>
+      <h3 className="font-semibold">{user.name}</h3>
 
-      {showEmail && <p className="mt-2 text-sm text-zinc-400">{email}</p>}
+      {showEmail && <p className="mt-2 text-sm text-zinc-400">{user.email}</p>}
 
       <button
         type="button"
@@ -24,6 +30,6 @@ const UserCard = ({ name, email }: UserCardProps) => {
       </button>
     </article>
   );
-};
+}
 
 export default UserCard;

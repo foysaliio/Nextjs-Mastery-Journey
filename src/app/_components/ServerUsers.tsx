@@ -26,10 +26,7 @@ const ServerUsers = async () => {
 
       <div className="mt-5 space-y-3">
         {users.slice(0, 3).map((user) => (
-          <UserCard
-          key={user.id}
-          name={user.name}
-          email={user.email} />
+          <UserCard key={user.id} user={user} />
         ))}
       </div>
     </section>
