@@ -2,6 +2,7 @@ import InteractiveProfile from "./_components/InteractiveProfile";
 import JourneyBadge from "./_components/JourneyBadge";
 import ServerGreeting from "./_components/ServerGreeting";
 import ServerUsers from "./_components/ServerUsers";
+import UserPanel from "./_components/UserPanel";
 
 export default function HomePage() {
   return (
@@ -19,9 +20,11 @@ export default function HomePage() {
 
         <ServerGreeting />
 
-        <InteractiveProfile />
+        <UserPanel>
+          <ServerUsers />
+        </UserPanel>
 
-        <ServerUsers />
+        <InteractiveProfile />
       </div>
     </main>
   );
