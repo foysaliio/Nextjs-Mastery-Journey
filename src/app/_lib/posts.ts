@@ -11,7 +11,7 @@ export const getPosts = async (): Promise<Post[]> => {
     throw new Error("Failed to fetch posts");
   }
 
-  const posts: Post[] = await response.json()
+  const posts: Post[] = await response.json();
 
   return posts;
 };
