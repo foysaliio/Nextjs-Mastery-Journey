@@ -1,3 +1,4 @@
+import AsyncMessage from "./_components/AsyncMessage";
 import InteractiveProfile from "./_components/InteractiveProfile";
 import JourneyBadge from "./_components/JourneyBadge";
 import ServerGreeting from "./_components/ServerGreeting";
@@ -23,6 +24,8 @@ export default function HomePage() {
         <UserPanel>
           <ServerUsers />
         </UserPanel>
+
+        <AsyncMessage />
 
         <InteractiveProfile />
       </div>
