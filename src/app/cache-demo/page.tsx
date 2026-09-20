@@ -1,34 +1,13 @@
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-}
+import { getCachedProducts } from "../_lib/cached-products";
 
-const getProducts = async (): Promise<Product[]> => {
-  "use cache";
+export default async function CacheDemoPage() {
+  const products = await getCachedProducts();
 
-  console.log("Fetching products...");
-
-  const response = await fetch("https://dummyjson.com/products?limit=5");
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch products");
-  }
-
-  const data: {
-    products: Product[];
-  } = await response.json();
-
-  return data.products;
-};
-
-const CacheDemoPage = async () => {
-  const products = await getProducts();
   return (
     <main className="min-h-screen bg-zinc-950 px-6 py-16 text-white">
       <div className="mx-auto max-w-3xl">
         <p className="text-sm uppercase tracking-widest text-zinc-500">
-          Cache Demo
+          Data Cache
         </p>
 
         <h1 className="mt-4 text-4xl font-bold">Cached Products</h1>
@@ -48,6 +27,4 @@ const CacheDemoPage = async () => {
       </div>
     </main>
   );
-};
-
-export default CacheDemoPage;
+}
