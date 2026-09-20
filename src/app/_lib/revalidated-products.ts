@@ -1,4 +1,4 @@
-import { cacheLife } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 
 interface Product {
   id: number;
@@ -23,6 +23,8 @@ export const getRevalidatedProducts = async (): Promise<ProductResult> => {
     revalidate: 60,
     expire: 3600,
   });
+
+  cacheTag("products");
 
   console.log("Generating fresh product data...");
 
