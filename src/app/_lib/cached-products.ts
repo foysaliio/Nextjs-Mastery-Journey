@@ -1,3 +1,5 @@
+import { cacheLife } from "next/cache";
+
 export interface CachedProduct {
   id: number;
   title: string;
@@ -10,6 +12,8 @@ interface ProductResponse {
 
 export const getCachedProducts = async (): Promise<CachedProduct[]> => {
   "use cache";
+
+  cacheLife("hours");
 
   console.log("Fetching products from API");
 
