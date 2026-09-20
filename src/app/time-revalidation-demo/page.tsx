@@ -1,6 +1,10 @@
 import { getRevalidatedProducts } from "../_lib/revalidated-products";
 
-import { refreshProductsImmediately, revalidateProducts } from "./actions";
+import {
+  refreshProductsImmediately,
+  revalidateProducts,
+  revalidateProductsPage,
+} from "./actions";
 
 export default async function TimeRevalidationPage() {
   const { products, generatedAt } = await getRevalidatedProducts();
@@ -16,16 +20,22 @@ export default async function TimeRevalidationPage() {
 
         <p className="mt-3 text-zinc-400">Generated at: {generatedAt}</p>
 
-        <div className="mt-6 flex gap-3">
+        <div className="mt-6 flex flex-wrap gap-3">
           <form action={revalidateProducts}>
             <button type="submit" className="rounded bg-blue-600 px-4 py-2">
-              Revalidate
+              Revalidate Tag
             </button>
           </form>
 
           <form action={refreshProductsImmediately}>
             <button type="submit" className="rounded bg-emerald-600 px-4 py-2">
-              Refresh Immediately
+              Update Tag
+            </button>
+          </form>
+
+          <form action={revalidateProductsPage}>
+            <button type="submit" className="rounded bg-violet-600 px-4 py-2">
+              Revalidate Path
             </button>
           </form>
         </div>
