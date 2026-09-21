@@ -4,6 +4,8 @@ import { useActionState } from "react";
 
 import { submitProfile, type FormState } from "./actions";
 
+import SubmitButton from "./SubmitButton";
+
 const initialState: FormState = {
   errors: {},
   message: "",
@@ -80,12 +82,7 @@ export default function ProfileForm() {
         </div>
       </div>
 
-      <button
-        type="submit"
-        className="rounded-lg bg-blue-600 px-5 py-3 font-medium"
-      >
-        Submit Profile
-      </button>
+      <SubmitButton />
 
       {state.message && (
         <p aria-live="polite" className="text-sm text-zinc-300">
