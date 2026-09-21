@@ -1,16 +1,6 @@
+import { submitProfile } from "./actions";
+
 const FormsDemoPage = () => {
-  const submitProfile = async (FormData: FormData) => {
-    "use server";
-
-    const name = FormData.get("name");
-    const email = FormData.get("email");
-
-    console.log({
-      name,
-      email,
-    });
-  };
-
   return (
     <main className="min-h-screen bg-zinc-950 px-6 py-16 text-white">
       <div className="mx-auto max-w-xl">
