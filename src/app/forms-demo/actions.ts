@@ -1,12 +1,15 @@
 "use server";
 
 export const submitProfile = async (FormData: FormData): Promise<void> => {
-  const name = FormData.get("name");
-  const email = FormData.get("email");
+  const rawName = FormData.get("name");
+  const rawEmail = FormData.get("email");
+  const rawAge = FormData.get("age");
 
-  const allEntries = Object.fromEntries(FormData.entries());
+  const profile = {
+    name: typeof rawName === "string" ? rawName.trim() : "",
+    email: typeof rawEmail === "string" ? rawEmail.trim().toLowerCase() : "",
+    age: typeof rawAge === "string" ? Number(rawAge) : Number.NaN,
+  };
 
-  console.log("Name :", name);
-  console.log("Email :", email);
-  console.log("All Form Data :", allEntries);
+  console.log("Normalized Profile: ", profile);
 };
