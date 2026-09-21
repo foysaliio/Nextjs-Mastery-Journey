@@ -3,15 +3,10 @@
 import * as z from "zod";
 
 const ProfileSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, {
-      error: "Name must be at least 2 characters.",
-    })
-    .max(50, {
-      error: "Name must be 50 characters or less.",
-    }),
+  name: z.string().trim().min(2, {
+    error: "Name must be at least 2 characters.",
+  }),
+
   email: z
     .string()
     .trim()
@@ -21,6 +16,7 @@ const ProfileSchema = z.object({
         error: "Enter a valid email address.",
       }),
     ),
+
   age: z.coerce
     .number()
     .int({
@@ -28,13 +24,22 @@ const ProfileSchema = z.object({
     })
     .min(18, {
       error: "You must be at least 18.",
-    })
-    .max(120, {
-      error: "Enter a valid age.",
     }),
 });
 
-export const submitProfile = async (formData: FormData): Promise<void> => {
+export type FormState = {
+  errors?: {
+    name?: string[];
+    email?: string[];
+    age?: string[];
+  };
+  message?: string;
+};
+
+export async function submitProfile(
+  _previousState: FormState,
+  formData: FormData,
+): Promise<FormState> {
   const result = ProfileSchema.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),
@@ -42,11 +47,16 @@ export const submitProfile = async (formData: FormData): Promise<void> => {
   });
 
   if (!result.success) {
-    const errors = z.flattenError(result.error).fieldErrors;
-
-    console.log("Validation Errors:", errors);
-    return;
+    return {
+      errors: z.flattenError(result.error).fieldErrors,
+      message: "Please fix the form errors.",
+    };
   }
 
   console.log("Validated Profile:", result.data);
-};
+
+  return {
+    errors: {},
+    message: "Profile data is valid.",
+  };
+}
