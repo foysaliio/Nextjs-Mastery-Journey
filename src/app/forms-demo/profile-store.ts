@@ -46,6 +46,18 @@ export function updateProfileById(
   return profile;
 }
 
+export function deleteProfileById(id: number): boolean {
+  const index = profiles.findIndex((profile) => profile.id === id);
+
+  if (index === -1) {
+    return false;
+  }
+
+  profiles.splice(index, 1);
+
+  return true;
+}
+
 export function getProfiles(): Profile[] {
   return profiles;
 }

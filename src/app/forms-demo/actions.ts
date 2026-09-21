@@ -2,7 +2,11 @@
 
 import * as z from "zod";
 
-import { createProfile, updateProfileById } from "./profile-store";
+import {
+  createProfile,
+  updateProfileById,
+  deleteProfileById,
+} from "./profile-store";
 
 const ProfileSchema = z.object({
   name: z.string().trim().min(2, "Name must be at least 2 characters."),
@@ -80,4 +84,16 @@ export async function updateProfile(
   }
 
   console.log("Updated Profile:", updatedProfile);
+}
+
+export async function deleteProfile(id: number): Promise<void> {
+  const deleted = deleteProfileById(id);
+
+  if (!deleted) {
+    console.log("Profile not found.");
+
+    return;
+  }
+
+  console.log("Deleted Profile ID:", id);
 }
