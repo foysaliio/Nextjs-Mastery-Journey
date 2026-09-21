@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import * as z from "zod";
 
 import {
@@ -46,7 +47,16 @@ export async function submitProfile(
     };
   }
 
-  createProfile(result.data);
+  try {
+    createProfile(result.data);
+  } catch (error) {
+    console.error("Create profile failed:", error);
+
+    return {
+      errors: {},
+      message: "Could not create profile.",
+    };
+  }
 
   revalidatePath("/forms-demo");
 
@@ -67,23 +77,47 @@ export async function updateProfile(
   });
 
   if (!result.success) {
-    console.log(
-      "Update Validation Errors:",
+    console.error(
+      "Update validation failed:",
       z.flattenError(result.error).fieldErrors,
     );
 
     return;
   }
 
-  updateProfileById(id, result.data);
+  try {
+    const updatedProfile = updateProfileById(id, result.data);
+
+    if (!updatedProfile) {
+      throw new Error("Profile not found.");
+    }
+  } catch (error) {
+    console.error("Update profile failed:", error);
+
+    return;
+  }
 
   revalidatePath("/forms-demo");
   revalidatePath("/forms-demo/edit");
+
+  redirect("/forms-demo");
 }
 
 export async function deleteProfile(id: number): Promise<void> {
-  deleteProfileById(id);
+  try {
+    const deleted = deleteProfileById(id);
+
+    if (!deleted) {
+      throw new Error("Profile not found.");
+    }
+  } catch (error) {
+    console.error("Delete profile failed:", error);
+
+    return;
+  }
 
   revalidatePath("/forms-demo");
   revalidatePath("/forms-demo/edit");
+
+  redirect("/forms-demo");
 }
