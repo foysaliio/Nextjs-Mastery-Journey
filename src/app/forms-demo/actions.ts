@@ -1,6 +1,7 @@
 "use server";
 
 import * as z from "zod";
+import { createProfile } from "./profile-store";
 
 const ProfileSchema = z.object({
   name: z.string().trim().min(2, {
@@ -53,10 +54,12 @@ export async function submitProfile(
     };
   }
 
-  console.log("Validated Profile:", result.data);
+  const profile = createProfile(result.data);
+
+  console.log("Created Profile:", profile);
 
   return {
     errors: {},
-    message: "Profile data is valid.",
+    message: "Profile created successfully.",
   };
 }
