@@ -1,11 +1,12 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 import {
   createProfile,
-  updateProfileById,
   deleteProfileById,
+  updateProfileById,
 } from "./profile-store";
 
 const ProfileSchema = z.object({
@@ -41,14 +42,13 @@ export async function submitProfile(
   if (!result.success) {
     return {
       errors: z.flattenError(result.error).fieldErrors,
-
       message: "Please fix the form errors.",
     };
   }
 
-  const profile = createProfile(result.data);
+  createProfile(result.data);
 
-  console.log("Created Profile:", profile);
+  revalidatePath("/forms-demo");
 
   return {
     errors: {},
@@ -75,25 +75,15 @@ export async function updateProfile(
     return;
   }
 
-  const updatedProfile = updateProfileById(id, result.data);
+  updateProfileById(id, result.data);
 
-  if (!updatedProfile) {
-    console.log("Profile not found.");
-
-    return;
-  }
-
-  console.log("Updated Profile:", updatedProfile);
+  revalidatePath("/forms-demo");
+  revalidatePath("/forms-demo/edit");
 }
 
 export async function deleteProfile(id: number): Promise<void> {
-  const deleted = deleteProfileById(id);
+  deleteProfileById(id);
 
-  if (!deleted) {
-    console.log("Profile not found.");
-
-    return;
-  }
-
-  console.log("Deleted Profile ID:", id);
+  revalidatePath("/forms-demo");
+  revalidatePath("/forms-demo/edit");
 }
