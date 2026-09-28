@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import AsyncMessage from "./_components/AsyncMessage";
 import InteractiveProfile from "./_components/InteractiveProfile";
 import JourneyBadge from "./_components/JourneyBadge";
@@ -25,7 +26,17 @@ export default function HomePage() {
           <ServerUsers />
         </UserPanel>
 
-        <AsyncMessage />
+        <Suspense
+          fallback={
+            <section className="mt-8 rounded-xl border border-zinc-800 p-6">
+              <p className="text-sm text-zinc-400">Loading...</p>
+
+              <h2 className="mt-2 text-2xl font-bold">Loading message...</h2>
+            </section>
+          }
+        >
+          <AsyncMessage />
+        </Suspense>
 
         <InteractiveProfile />
       </div>
