@@ -4,6 +4,7 @@ type Product = {
   price: number;
 };
 
+
 const products: Product[] = [
   {
     id: 1,
