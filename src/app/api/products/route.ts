@@ -4,7 +4,6 @@ type Product = {
   price: number;
 };
 
-
 const products: Product[] = [
   {
     id: 1,
@@ -23,9 +22,16 @@ const products: Product[] = [
   },
 ];
 
-export async function GET() {
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+
   return Response.json({
     success: true,
+    request: {
+      method: request.method,
+      endpoint: url.pathname,
+      resource: "products",
+    },
     data: products,
   });
 }
