@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 type Product = {
   id: number;
@@ -20,23 +20,35 @@ const products: Product[] = [
     price: 60,
     inStock: true,
   },
-  {
-    id: 3,
-    name: "USB-C Hub",
-    price: 45,
-    inStock: false,
-  },
 ];
 
 export async function GET() {
+  return NextResponse.json({
+    success: true,
+    data: products,
+  });
+}
+
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+
+  const newProduct: Product = {
+    id: products.length + 1,
+    name: body.name,
+    price: body.price,
+    inStock: body.inStock,
+  };
+
+  products.push(newProduct);
+
   return NextResponse.json(
     {
       success: true,
-      message: "Products fetched successfully",
-      data: products,
+      message: "Product created successfully",
+      data: newProduct,
     },
     {
-      status: 200,
+      status: 201,
     },
   );
 }
