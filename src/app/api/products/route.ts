@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-interface Product {
+type Product = {
   id: number;
   name: string;
   price: number;
   inStock: boolean;
-}
+};
 
 const products: Product[] = [
   {
@@ -28,28 +28,15 @@ const products: Product[] = [
   },
 ];
 
-export const GET = async (request: NextRequest) => {
-  const pathname = request.nextUrl.pathname;
-
-  const method = request.method;
-
-  const userAgent = request.headers.get("user-agent");
-
+export async function GET() {
   return NextResponse.json(
     {
       success: true,
-      request: {
-        method,
-        pathname,
-        userAgent,
-      },
+      message: "Products fetched successfully",
       data: products,
     },
     {
       status: 200,
-      headers: {
-        "X-API-Version": "1.0",
-      },
     },
   );
 }
