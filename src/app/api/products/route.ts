@@ -1,3 +1,5 @@
+import { NextRequest, NextResponse } from "next/server";
+
 interface Product {
   id: number;
   name: string;
@@ -26,11 +28,28 @@ const products: Product[] = [
   },
 ];
 
-export const GET = async () => {
-  return Response.json({
-    success: true,
-    message: "Products fetched successfully",
-    count: products.length,
-    data: products,
-  });
-};
+export const GET = async (request: NextRequest) => {
+  const pathname = request.nextUrl.pathname;
+
+  const method = request.method;
+
+  const userAgent = request.headers.get("user-agent");
+
+  return NextResponse.json(
+    {
+      success: true,
+      request: {
+        method,
+        pathname,
+        userAgent,
+      },
+      data: products,
+    },
+    {
+      status: 200,
+      headers: {
+        "X-API-Version": "1.0",
+      },
+    },
+  );
+}
