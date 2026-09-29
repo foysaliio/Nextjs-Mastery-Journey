@@ -29,26 +29,59 @@ export async function GET() {
   });
 }
 
-export async function POST(request: NextRequest) {
+export async function PUT(request: NextRequest) {
   const body = await request.json();
 
-  const newProduct: Product = {
-    id: products.length + 1,
+  const index = products.findIndex((product) => product.id === body.id);
+
+  if (index === -1) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Product not found",
+      },
+      {
+        status: 404,
+      },
+    );
+  }
+
+  products[index] = {
+    id: body.id,
     name: body.name,
     price: body.price,
     inStock: body.inStock,
   };
 
-  products.push(newProduct);
+  return NextResponse.json({
+    success: true,
+    message: "Product replaced successfully",
+    data: products[index],
+  });
+}
 
-  return NextResponse.json(
-    {
-      success: true,
-      message: "Product created successfully",
-      data: newProduct,
-    },
-    {
-      status: 201,
-    },
-  );
+export async function PATCH(request: NextRequest) {
+  const body = await request.json();
+
+  const product = products.find((item) => item.id === body.id);
+
+  if (!product) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Product not found",
+      },
+      {
+        status: 404,
+      },
+    );
+  }
+
+  Object.assign(product, body);
+
+  return NextResponse.json({
+    success: true,
+    message: "Product updated successfully",
+    data: product,
+  });
 }
