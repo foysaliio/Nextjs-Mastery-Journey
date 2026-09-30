@@ -20,124 +20,29 @@ const products: Product[] = [
     price: 60,
     inStock: true,
   },
-  {
-    id: 3,
-    name: "USB-C Hub",
-    price: 45,
-    inStock: false,
-  },
 ];
 
-export const GET = async () => {
-  return NextResponse.json({
+export const GET = async (request: NextRequest) => {
+  const userAgent = request.headers.get("user-agent");
+
+  const themeCookie = request.cookies.get("theme");
+
+  const response = NextResponse.json({
     success: true,
+    requestInfo: {
+      userAgent,
+      theme: themeCookie?.value ?? "not-set",
+    },
     data: products,
   });
-};
 
-export const POST = async (request: NextRequest) => {
-  const body = await request.json();
+  response.headers.set("X-API-Version", "1.0");
 
-  const newProduct: Product = {
-    id: products.length + 1,
-    name: body.name,
-    price: body.price,
-    inStock: body.inStock,
-  };
-
-  products.push(newProduct);
-
-  return NextResponse.json(
-    {
-      success: true,
-      message: "Product created successfully",
-      data: newProduct,
-    },
-    {
-      status: 201,
-    },
-  );
-};
-
-export const PUT = async (request: NextRequest) => {
-  const body = await request.json();
-
-  const index = products.findIndex((product) => product.id === body.id);
-
-  if (index === -1) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Product not found",
-      },
-      {
-        status: 404,
-      },
-    );
-  }
-
-  products[index] = {
-    id: body.id,
-    name: body.name,
-    price: body.price,
-    inStock: body.inStock,
-  };
-
-  return NextResponse.json({
-    success: true,
-    message: "Product replaced successfully",
-    data: products[index],
+  response.cookies.set("theme", "dark", {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
   });
-};
 
-export const PATCH = async (request: NextRequest) => {
-  const body = await request.json();
-
-  const product = products.find((item) => item.id === body.id);
-
-  if (!product) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Product not found",
-      },
-      {
-        status: 404,
-      },
-    );
-  }
-
-  Object.assign(product, body);
-
-  return NextResponse.json({
-    success: true,
-    message: "Product updated successfully",
-    data: product,
-  });
-};
-
-export const DELETE = async (request: NextRequest) => {
-  const body = await request.json();
-
-  const index = products.findIndex((product) => product.id === body.id);
-
-  if (index === -1) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Product not found",
-      },
-      {
-        status: 404,
-      },
-    );
-  }
-
-  const deletedProduct = products.splice(index, 1)[0];
-
-  return NextResponse.json({
-    success: true,
-    message: "Product deleted successfully",
-    data: deletedProduct,
-  });
+  return response;
 };
