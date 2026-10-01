@@ -1,17 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import * as z from "zod";
 
-import { products } from "./_data/products";
 import { createProductSchema } from "./_schemas/product.schema";
 
-export async function GET() {
+import { createProduct, getProducts } from "./_services/product.service";
+
+export const GET = async () => {
+  const products = getProducts();
+
   return NextResponse.json({
     success: true,
     data: products,
   });
-}
+};
 
-export async function POST(request: NextRequest) {
+export const POST = async (request: NextRequest) => {
   try {
     const body = await request.json();
 
@@ -32,12 +36,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const newProduct = {
-      id: products.length + 1,
-      ...result.data,
-    };
-
-    products.push(newProduct);
+    const newProduct = createProduct(result.data);
 
     return NextResponse.json(
       {
@@ -62,4 +61,4 @@ export async function POST(request: NextRequest) {
       },
     );
   }
-}
+};

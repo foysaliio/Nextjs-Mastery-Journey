@@ -1,19 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import * as z from "zod";
 
-import { products } from "../_data/products";
 import { updateProductSchema } from "../_schemas/product.schema";
 
-type RouteContext = {
+import {
+  deleteProduct,
+  getProductById,
+  updateProduct,
+} from "../_services/product.service";
+
+interface RouteContext {
   params: Promise<{
     id: string;
   }>;
-};
+}
 
-export async function GET(_request: NextRequest, { params }: RouteContext) {
+export const GET = async (_request: NextRequest, { params }: RouteContext) => {
   const { id } = await params;
 
-  const product = products.find((item) => item.id === Number(id));
+  const product = getProductById(Number(id));
 
   if (!product) {
     return NextResponse.json(
@@ -31,9 +37,9 @@ export async function GET(_request: NextRequest, { params }: RouteContext) {
     success: true,
     data: product,
   });
-}
+};
 
-export async function PATCH(request: NextRequest, { params }: RouteContext) {
+export const PATCH = async (request: NextRequest, { params }: RouteContext) => {
   try {
     const { id } = await params;
     const body = await request.json();
@@ -55,7 +61,7 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
       );
     }
 
-    const product = products.find((item) => item.id === Number(id));
+    const product = updateProduct(Number(id), result.data);
 
     if (!product) {
       return NextResponse.json(
@@ -68,8 +74,6 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
         },
       );
     }
-
-    Object.assign(product, result.data);
 
     return NextResponse.json({
       success: true,
@@ -89,14 +93,17 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
       },
     );
   }
-}
+};
 
-export async function DELETE(_request: NextRequest, { params }: RouteContext) {
+export const DELETE = async (
+  _request: NextRequest,
+  { params }: RouteContext,
+) => {
   const { id } = await params;
 
-  const index = products.findIndex((item) => item.id === Number(id));
+  const product = deleteProduct(Number(id));
 
-  if (index === -1) {
+  if (!product) {
     return NextResponse.json(
       {
         success: false,
@@ -108,11 +115,9 @@ export async function DELETE(_request: NextRequest, { params }: RouteContext) {
     );
   }
 
-  const deletedProduct = products.splice(index, 1)[0];
-
   return NextResponse.json({
     success: true,
     message: "Product deleted successfully",
-    data: deletedProduct,
+    data: product,
   });
-}
+};
