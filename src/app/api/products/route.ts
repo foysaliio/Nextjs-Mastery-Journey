@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as z from "zod";
 
-type Product = {
+interface Product {
   id: number;
   name: string;
   price: number;
   inStock: boolean;
-};
+}
 
 const products: Product[] = [
   {
@@ -36,47 +36,75 @@ const productSchema = z.object({
 });
 
 export async function GET() {
-  return NextResponse.json({
-    success: true,
-    data: products,
-  });
-}
-
-export async function POST(request: NextRequest) {
-  const body = await request.json();
-
-  const result = productSchema.safeParse(body);
-
-  if (!result.success) {
-    const errors = z.flattenError(result.error);
+  try {
+    return NextResponse.json({
+      success: true,
+      data: products,
+    });
+  } catch (error) {
+    console.error("GET products error:", error);
 
     return NextResponse.json(
       {
         success: false,
-        message: "Invalid product data",
-        errors: errors.fieldErrors,
+        message: "Failed to fetch products",
       },
       {
-        status: 400,
+        status: 500,
       },
     );
   }
+}
 
-  const newProduct: Product = {
-    id: products.length + 1,
-    ...result.data,
-  };
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
 
-  products.push(newProduct);
+    const result = productSchema.safeParse(body);
 
-  return NextResponse.json(
-    {
-      success: true,
-      message: "Product created successfully",
-      data: newProduct,
-    },
-    {
-      status: 201,
-    },
-  );
+    if (!result.success) {
+      const errors = z.flattenError(result.error);
+
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Invalid product data",
+          errors: errors.fieldErrors,
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    const newProduct: Product = {
+      id: products.length + 1,
+      ...result.data,
+    };
+
+    products.push(newProduct);
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Product created successfully",
+        data: newProduct,
+      },
+      {
+        status: 201,
+      },
+    );
+  } catch (error) {
+    console.error("POST product error:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Something went wrong",
+      },
+      {
+        status: 500,
+      },
+    );
+  }
 }
