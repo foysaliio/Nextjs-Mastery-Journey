@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as z from "zod";
 
-import { products } from "../products";
+import { products } from "../_data/products";
+import { updateProductSchema } from "../_schemas/product.schema";
 
 type RouteContext = {
   params: Promise<{
@@ -32,30 +34,61 @@ export async function GET(_request: NextRequest, { params }: RouteContext) {
 }
 
 export async function PATCH(request: NextRequest, { params }: RouteContext) {
-  const { id } = await params;
-  const body = await request.json();
+  try {
+    const { id } = await params;
+    const body = await request.json();
 
-  const product = products.find((item) => item.id === Number(id));
+    const result = updateProductSchema.safeParse(body);
 
-  if (!product) {
+    if (!result.success) {
+      const errors = z.flattenError(result.error);
+
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Invalid product data",
+          errors: errors.fieldErrors,
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    const product = products.find((item) => item.id === Number(id));
+
+    if (!product) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Product not found",
+        },
+        {
+          status: 404,
+        },
+      );
+    }
+
+    Object.assign(product, result.data);
+
+    return NextResponse.json({
+      success: true,
+      message: "Product updated successfully",
+      data: product,
+    });
+  } catch (error) {
+    console.error("Update product error:", error);
+
     return NextResponse.json(
       {
         success: false,
-        message: "Product not found",
+        message: "Something went wrong",
       },
       {
-        status: 404,
+        status: 500,
       },
     );
   }
-
-  Object.assign(product, body);
-
-  return NextResponse.json({
-    success: true,
-    message: "Product updated successfully",
-    data: product,
-  });
 }
 
 export async function DELETE(_request: NextRequest, { params }: RouteContext) {

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as z from "zod";
 
-import { Product, products } from "./products";
+import { products } from "./_data/products";
+import { createProductSchema } from "./_schemas/product.schema";
 
 export async function GET() {
   return NextResponse.json({
@@ -10,25 +12,54 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
+  try {
+    const body = await request.json();
 
-  const newProduct: Product = {
-    id: products.length + 1,
-    name: body.name,
-    price: body.price,
-    inStock: body.inStock,
-  };
+    const result = createProductSchema.safeParse(body);
 
-  products.push(newProduct);
+    if (!result.success) {
+      const errors = z.flattenError(result.error);
 
-  return NextResponse.json(
-    {
-      success: true,
-      message: "Product created successfully",
-      data: newProduct,
-    },
-    {
-      status: 201,
-    },
-  );
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Invalid product data",
+          errors: errors.fieldErrors,
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    const newProduct = {
+      id: products.length + 1,
+      ...result.data,
+    };
+
+    products.push(newProduct);
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Product created successfully",
+        data: newProduct,
+      },
+      {
+        status: 201,
+      },
+    );
+  } catch (error) {
+    console.error("Create product error:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Something went wrong",
+      },
+      {
+        status: 500,
+      },
+    );
+  }
 }
