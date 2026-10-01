@@ -16,49 +16,35 @@ export const GET = async () => {
 };
 
 export const POST = async (request: NextRequest) => {
-  try {
-    const body = await request.json();
+  const body = await request.json();
 
-    const result = createProductSchema.safeParse(body);
+  const result = createProductSchema.safeParse(body);
 
-    if (!result.success) {
-      const errors = z.flattenError(result.error);
-
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Invalid product data",
-          errors: errors.fieldErrors,
-        },
-        {
-          status: 400,
-        },
-      );
-    }
-
-    const newProduct = createProduct(result.data);
-
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Product created successfully",
-        data: newProduct,
-      },
-      {
-        status: 201,
-      },
-    );
-  } catch (error) {
-    console.error("Create product error:", error);
+  if (!result.success) {
+    const errors = z.flattenError(result.error);
 
     return NextResponse.json(
       {
         success: false,
-        message: "Something went wrong",
+        message: "Invalid product data",
+        errors: errors.fieldErrors,
       },
       {
-        status: 500,
+        status: 400,
       },
     );
   }
+
+  const product = createProduct(result.data);
+
+  return NextResponse.json(
+    {
+      success: true,
+      message: "Product created successfully",
+      data: product,
+    },
+    {
+      status: 201,
+    },
+  );
 };
