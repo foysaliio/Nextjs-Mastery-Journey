@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as z from "zod";
 
 type Product = {
   id: number;
@@ -20,51 +21,50 @@ const products: Product[] = [
     price: 60,
     inStock: true,
   },
-  {
-    id: 3,
-    name: "USB-C Hub",
-    price: 45,
-    inStock: false,
-  },
 ];
 
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
+const productSchema = z.object({
+  name: z.string().min(2, {
+    error: "Name must be at least 2 characters",
+  }),
 
-  const query = searchParams.get("q");
-  const stock = searchParams.get("inStock");
+  price: z.number().positive({
+    error: "Price must be greater than 0",
+  }),
 
-  let filteredProducts = [...products];
+  inStock: z.boolean(),
+});
 
-  if (query) {
-    filteredProducts = filteredProducts.filter((product) =>
-      product.name.toLowerCase().includes(query.toLowerCase()),
-    );
-  }
-
-  if (stock) {
-    const inStock = stock === "true";
-
-    filteredProducts = filteredProducts.filter(
-      (product) => product.inStock === inStock,
-    );
-  }
-
+export async function GET() {
   return NextResponse.json({
     success: true,
-    count: filteredProducts.length,
-    data: filteredProducts,
+    data: products,
   });
 }
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
 
+  const result = productSchema.safeParse(body);
+
+  if (!result.success) {
+    const errors = z.flattenError(result.error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Invalid product data",
+        errors: errors.fieldErrors,
+      },
+      {
+        status: 400,
+      },
+    );
+  }
+
   const newProduct: Product = {
     id: products.length + 1,
-    name: body.name,
-    price: body.price,
-    inStock: body.inStock,
+    ...result.data,
   };
 
   products.push(newProduct);
@@ -79,87 +79,4 @@ export async function POST(request: NextRequest) {
       status: 201,
     },
   );
-}
-
-export async function PUT(request: NextRequest) {
-  const body = await request.json();
-
-  const index = products.findIndex((product) => product.id === body.id);
-
-  if (index === -1) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Product not found",
-      },
-      {
-        status: 404,
-      },
-    );
-  }
-
-  products[index] = {
-    id: body.id,
-    name: body.name,
-    price: body.price,
-    inStock: body.inStock,
-  };
-
-  return NextResponse.json({
-    success: true,
-    message: "Product replaced successfully",
-    data: products[index],
-  });
-}
-
-export async function PATCH(request: NextRequest) {
-  const body = await request.json();
-
-  const product = products.find((item) => item.id === body.id);
-
-  if (!product) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Product not found",
-      },
-      {
-        status: 404,
-      },
-    );
-  }
-
-  Object.assign(product, body);
-
-  return NextResponse.json({
-    success: true,
-    message: "Product updated successfully",
-    data: product,
-  });
-}
-
-export async function DELETE(request: NextRequest) {
-  const body = await request.json();
-
-  const index = products.findIndex((product) => product.id === body.id);
-
-  if (index === -1) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Product not found",
-      },
-      {
-        status: 404,
-      },
-    );
-  }
-
-  const deletedProduct = products.splice(index, 1)[0];
-
-  return NextResponse.json({
-    success: true,
-    message: "Product deleted successfully",
-    data: deletedProduct,
-  });
 }
