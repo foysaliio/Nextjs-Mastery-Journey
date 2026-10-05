@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local auth database
+auth.db
+auth.db-shm
+auth.db-wal
