@@ -43,6 +43,7 @@ const SignInPage = () => {
     });
 
     if (error) {
+      
       setMessage(error.message ?? "Sign in failed");
 
       setIsPending(false);
