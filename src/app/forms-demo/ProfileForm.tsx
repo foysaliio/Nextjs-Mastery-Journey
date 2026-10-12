@@ -18,7 +18,7 @@ export default function ProfileForm() {
     <form action={formAction} className="mt-8 space-y-5">
       <div>
         <label htmlFor="name" className="block text-sm text-zinc-300">
-          Name
+          Name:
         </label>
 
         <input
