@@ -25,7 +25,7 @@ const SessionStatus = () => {
   }
 
   if (!session) {
-    return <p>You are not signed in.</p>;
+    return <p>you are not signed in.</p>;
   }
 
   return (
