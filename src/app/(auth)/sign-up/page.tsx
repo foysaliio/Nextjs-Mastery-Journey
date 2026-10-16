@@ -1,6 +1,6 @@
 "use client";
 
-import { SubmitEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 
 import { authClient } from "@/lib/auth-client";
 import { signUpSchema } from "@/lib/schemas/auth.schema";
@@ -10,7 +10,7 @@ const SignUpPage = () => {
 
   const [isPending, setIsPending] = useState(false);
 
-  const handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setMessage("");

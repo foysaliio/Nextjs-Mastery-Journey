@@ -1,6 +1,6 @@
 "use client";
 
-import { SubmitEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { authClient } from "@/lib/auth-client";
@@ -13,7 +13,7 @@ const SignInPage = () => {
 
   const [isPending, setIsPending] = useState(false);
 
-  const handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setMessage("");
@@ -43,7 +43,6 @@ const SignInPage = () => {
     });
 
     if (error) {
-      
       setMessage(error.message ?? "Sign in failed");
 
       setIsPending(false);
