@@ -73,7 +73,7 @@ const SignInPage = () => {
         </div>
 
         <button type="submit" disabled={isPending}>
-          {isPending ? "Signing in..." : "Sign In"}
+          {isPending ? "Signing in.." : "Sign In"}
         </button>
       </form>
 
