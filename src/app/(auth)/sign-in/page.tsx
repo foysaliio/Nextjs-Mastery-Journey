@@ -16,7 +16,7 @@ const SignInPage = () => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    setMessage("");
+    setMessage('');
     setIsPending(true);
 
     const formData = new FormData(event.currentTarget);
