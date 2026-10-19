@@ -32,7 +32,7 @@ const SessionStatus = () => {
     <section>
       <h2>Client Session</h2>
 
-      <p>Welcome, {session.user.name}</p>
+      <p>Welcome... {session.user.name}</p>
 
       <p>{session.user.email}</p>
 
