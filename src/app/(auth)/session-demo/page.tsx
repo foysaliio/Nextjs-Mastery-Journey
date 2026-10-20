@@ -22,7 +22,7 @@ const SessionDemoPage = async () => {
           <p>User ID: {session.user.id}</p>
         </div>
       ) : (
-        <p>No active session</p>
+        <p>No, active session</p>
       )}
 
       <hr />
