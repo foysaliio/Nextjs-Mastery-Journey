@@ -34,6 +34,28 @@ export const auth = betterAuth({
       id,
     }),
   },
+  rateLimit: {
+    enabled: true,
+    window: 10,
+    max: 100,
+
+    customRules: {
+      "/sign-in/email": {
+        window: 10,
+        max: 3,
+      },
+
+      "/sign-up/email": {
+        window: 60,
+        max: 5,
+      },
+
+      "/request-password-reset": {
+        window: 60,
+        max: 3,
+      },
+    },
+  },
 
   emailVerification: {
     sendOnSignUp: true,
