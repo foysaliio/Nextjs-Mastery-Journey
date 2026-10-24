@@ -136,7 +136,7 @@ export const ResetPasswordForm = () => {
 
       {message && (
         <Link href="/sign-in" className="mt-3 inline-block underline">
-          Go to sign in
+          Go to sign in...
         </Link>
       )}
     </main>
