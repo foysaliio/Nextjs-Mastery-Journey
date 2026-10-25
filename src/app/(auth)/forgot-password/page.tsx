@@ -85,7 +85,7 @@ const ForgotPasswordPage = () => {
       )}
 
       <Link href="/sign-in" className="mt-4 inline-block underline">
-        Back to sign in
+        Back to sign in!
       </Link>
     </main>
   );
