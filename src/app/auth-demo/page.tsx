@@ -15,7 +15,7 @@ const demoSession: Session | null = {
 const AuthDemoPage = () => {
   const user = demoSession?.user ?? null;
 
-  const isAuthenticated = Boolean(user);
+  const hasActiveSession = Boolean(user);
 
   const isAuthorized = canAccessAdminArea(user);
 
@@ -23,7 +23,7 @@ const AuthDemoPage = () => {
     <main>
       <h1>Authentication Mental Model</h1>
 
-      <p>Authenticated: {isAuthenticated ? "Yes" : "No"}</p>
+      <p>Authenticated: {hasActiveSession ? "Yes" : "No"}</p>
 
       <p>Admin Access: {isAuthorized ? "Allowed" : "Denied"}</p>
     </main>
