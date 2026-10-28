@@ -9,21 +9,18 @@ const AdminPage = async () => {
     headers: await headers(),
   });
 
-  if (!session) {
-    redirect("/auth/sign-in");
-  }
-
-  if (!isAdmin(session.user)) {
-    redirect("/");
-  }
+  if (!session) redirect("/auth/sign-in");
+  if (!isAdmin(session.user)) redirect("/");
 
   return (
     <main>
       <h1>Admin Dashboard</h1>
 
-      <p>Welcome, {session.user.name}</p>
+      <p>Welcome back, {session.user.name}!</p>
 
-      <p>Role: {session.user.role}</p>
+      <p>
+        Role: <strong>{session.user.role}</strong>
+      </p>
     </main>
   );
 };
