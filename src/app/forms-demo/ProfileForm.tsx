@@ -25,6 +25,8 @@ export default function ProfileForm() {
           id="name"
           name="name"
           type="text"
+          required
+          minLength={2}
           aria-describedby="name-error"
           className="mt-2 w-full rounded-lg bg-zinc-900 p-3"
         />
@@ -40,13 +42,14 @@ export default function ProfileForm() {
 
       <div>
         <label htmlFor="email" className="block text-sm text-zinc-300">
-          Email
+          Email:
         </label>
 
         <input
           id="email"
           name="email"
           type="email"
+          required
           aria-describedby="email-error"
           className="mt-2 w-full rounded-lg bg-zinc-900 p-3"
         />
@@ -62,13 +65,15 @@ export default function ProfileForm() {
 
       <div>
         <label htmlFor="age" className="block text-sm text-zinc-300">
-          Age
+          Age:
         </label>
 
         <input
           id="age"
           name="age"
           type="number"
+          required
+          min={1}
           aria-describedby="age-error"
           className="mt-2 w-full rounded-lg bg-zinc-900 p-3"
         />
