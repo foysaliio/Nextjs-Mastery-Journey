@@ -11,50 +11,52 @@ interface User {
   email: string;
 }
 
-const getPost = async (): Promise<Post> => {
-  const response = await fetch("https://jsonplaceholder.typicode.com/posts/1");
+const fetchPost = async (): Promise<Post> => {
+  const response = await fetch("https://jsonplaceholder.typicode.com/posts/3");
 
   if (!response.ok) {
-    throw new Error("Failed to fetch post");
+    throw new Error("Failed to load post");
   }
 
   return response.json();
 };
 
-const getUser = async (userId: number): Promise<User> => {
+const fetchUser = async (userId: number): Promise<User> => {
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/users/${userId}`,
   );
 
   if (!response.ok) {
-    throw new Error("Failed to fetch user");
+    throw new Error("Failed to load user");
   }
 
   return response.json();
 };
 
 const PostDetailsPage = async () => {
-  const post = await getPost();
+  const post = await fetchPost();
 
-  const user = await getUser(post.userId);
+  const user = await fetchUser(post.userId);
 
   return (
-    <main className="min-h-screen bg-zinc-950 px-6 py-16 text-white">
-      <article className="mx-auto max-w-3xl">
-        <p className="text-sm uppercase tracking-widest text-zinc-400">
-          Sequential Data Fetching
+    <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
+      <article className="mx-auto max-w-4xl">
+        <p className="text-sm font-semibold uppercase tracking-widest text-indigo-400">
+          Post Details
         </p>
 
-        <h1 className="mt-4 text-4xl font-bold">{post.title}</h1>
+        <h1 className="mt-5 text-4xl font-bold text-white">{post.title}</h1>
 
-        <p className="mt-4 text-zinc-300">{post.body}</p>
+        <p className="mt-5 text-lg leading-8 text-slate-300">{post.body}</p>
 
-        <div className="mt-8 rounded-xl border border-zinc-800 p-5">
-          <p className="text-sm text-zinc-400">Written by</p>
+        <div className="mt-10 rounded-2xl border border-slate-800 bg-slate-900 p-6">
+          <p className="text-sm text-slate-400">Author Information</p>
 
-          <h2 className="mt-2 text-xl font-semibold">{user.name}</h2>
+          <h2 className="mt-3 text-2xl font-semibold text-indigo-300">
+            {user.name}
+          </h2>
 
-          <p className="mt-1 text-zinc-400">{user.email}</p>
+          <p className="mt-2 text-slate-400">{user.email}</p>
         </div>
       </article>
     </main>
